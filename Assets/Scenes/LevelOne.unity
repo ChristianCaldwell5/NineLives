@@ -2459,7 +2459,7 @@ Animator:
   m_GameObject: {fileID: 1691454502}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 239436df6b96c4d329363d57aabe2865, type: 2}
+  m_Controller: {fileID: 9100000, guid: 37bbd9dc9c86d4f5492dd35c10c16299, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -2488,6 +2488,20 @@ MonoBehaviour:
   hitClip: {fileID: 8300000, guid: 4bcde6de2166e41e284ec46d8a01fb90, type: 3}
   collectionClip: {fileID: 8300000, guid: 08ab7053d586c458db3774d33c141a4b, type: 3}
   hitIndicator: {fileID: 1820250546}
+  catAnimationControllers:
+  - {fileID: 9100000, guid: 239436df6b96c4d329363d57aabe2865, type: 2}
+  - {fileID: 9100000, guid: 799eb622586834911b0b01a0468e0fa1, type: 2}
+  - {fileID: 9100000, guid: 44f34cf03334c4b8b885c33ce45df14c, type: 2}
+  - {fileID: 9100000, guid: 4cab2094b0a454b05bf2c3c182741fb4, type: 2}
+  - {fileID: 9100000, guid: 890b818de3b3b42e2a49a565806a02ce, type: 2}
+  - {fileID: 9100000, guid: 37bbd9dc9c86d4f5492dd35c10c16299, type: 2}
+  jumpSprites:
+  - {fileID: -1763267072, guid: 2ad3cc18f9a18b048a10527d2aa6ae46, type: 3}
+  - {fileID: 587833758, guid: 98f7b2ab72126f044b2da2e5cd2e43af, type: 3}
+  - {fileID: -1438718943, guid: 0f81ef3f261eb3042b0a40f92dda9beb, type: 3}
+  - {fileID: 1350770004, guid: e8484ff5fa033054db28011d75be187f, type: 3}
+  - {fileID: 1204641084, guid: 590af8f38727d264a9d41fd02adc7f7c, type: 3}
+  - {fileID: -269504976, guid: b11d658090880cc4aa9fffea6f9e4605, type: 3}
 --- !u!82 &1691454509
 AudioSource:
   m_ObjectHideFlags: 0

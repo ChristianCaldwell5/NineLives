@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour
     public AudioClip hitClip;
     public AudioClip collectionClip;
     public GameObject hitIndicator;
+    public List<RuntimeAnimatorController> catAnimationControllers;
+    public List<Sprite> jumpSprites;
 
     // components
     private Animator playerAnimator;
@@ -17,6 +19,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D playerRb;
     private AudioSource playerAs;
     // state
+    private int selectedCat;
     private float leftBound = -8.0f;
     private bool isGrounded = true;
     //private bool isIdle = true;
@@ -24,10 +27,14 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        selectedCat = MainManager.Instance.SelectedCat;
         playerAnimator = gameObject.GetComponent<Animator>();
         playerRb = gameObject.GetComponent<Rigidbody2D>();
         playerSr = gameObject.GetComponent<SpriteRenderer>();
         playerAs = gameObject.GetComponent<AudioSource>();
+
+        // set player animator by selected cat
+        playerAnimator.runtimeAnimatorController = catAnimationControllers[selectedCat];
     }
 
     // Update is called once per frame
@@ -55,6 +62,7 @@ public class PlayerController : MonoBehaviour
         // check for space bar press to jump
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
+            playerSr.sprite = jumpSprites[selectedCat];
             playerRb.AddForce(Vector2.up * jumpAmount, ForceMode2D.Impulse);
             playerAs.PlayOneShot(jumpAudioClip, 1.0f);
             isGrounded = false;

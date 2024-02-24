@@ -9,6 +9,8 @@ TagManager:
   - Obstacle
   - Fruit
   - Spike
+  - Flame
+  - Bullet
   layers:
   - Default
   - TransparentFX

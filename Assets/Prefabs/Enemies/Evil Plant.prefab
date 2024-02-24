@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 125960941926861764}
   - component: {fileID: 2658843396479789003}
   - component: {fileID: 2113994648967365483}
+  - component: {fileID: 7916706789465796555}
   m_Layer: 0
   m_Name: Evil Plant
   m_TagString: Enemy
@@ -152,3 +153,17 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7916706789465796555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3006332893051297129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d6f7a2e2ea6649919178dfe2c085947, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shotInterval: 4
+  bulletPrefab: {fileID: 5989230043425574849, guid: c0944a8aef730400ca92baba193a9ab3, type: 3}

@@ -47,7 +47,15 @@ public class MenuHandler : MonoBehaviour
     public void ScrollCat(int dir)
     {
         catDisplays[currentCatIndex].SetActive(false);
+
         currentCatIndex += dir;
+        if (currentCatIndex >= catDisplays.Count)
+        {
+            currentCatIndex = 0;
+        } else if (currentCatIndex < 0)
+        {
+            currentCatIndex = catDisplays.Count - 1;
+        }
         catDisplays[currentCatIndex].SetActive(true);
     }
 }

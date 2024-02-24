@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
     public List<RuntimeAnimatorController> catAnimationControllers;
     public List<Sprite> jumpSprites;
 
+    private GameManager gameManager;
+
     // components
     private Animator playerAnimator;
     private SpriteRenderer playerSr;
@@ -20,9 +22,7 @@ public class PlayerController : MonoBehaviour
     private AudioSource playerAs;
     // state
     private int selectedCat;
-    private float leftBound = -8.0f;
     private bool isGrounded = true;
-    //private bool isIdle = true;
 
     // Start is called before the first frame update
     void Start()
@@ -35,42 +35,40 @@ public class PlayerController : MonoBehaviour
 
         // set player animator by selected cat
         playerAnimator.runtimeAnimatorController = catAnimationControllers[selectedCat];
+
+        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        // get horizontal input (Associated keys with horizontal movement in Input Manager)
-        float horizontalInput = Input.GetAxisRaw("Horizontal");
-        playerAnimator.SetFloat("Speed_f", Mathf.Abs(horizontalInput));
-        if (horizontalInput > 0)
+        if (gameManager.isActive)
         {
-            playerSr.flipX = false;
-        }
-        if (horizontalInput < 0)
-        {
-            playerSr.flipX = true;
-        }
-        //playerAnimator.SetInteger("Speed_i", Mathf.Abs(horizontalInput));
+            // get horizontal input (Associated keys with horizontal movement in Input Manager)
+            float horizontalInput = Input.GetAxisRaw("Horizontal");
+            playerAnimator.SetFloat("Speed_f", Mathf.Abs(horizontalInput));
+            if (horizontalInput > 0)
+            {
+                playerSr.flipX = false;
+            }
+            if (horizontalInput < 0)
+            {
+                playerSr.flipX = true;
+            }
 
-        // keep the player in bounds
-        if (transform.position.x < leftBound)
-        {
-            transform.position = new Vector3(leftBound, transform.position.y, transform.position.z);
-        }
+            // check for space bar press to jump
+            if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+            {
+                playerAnimator.enabled = false;
+                playerSr.sprite = jumpSprites[selectedCat];
+                playerRb.AddForce(Vector2.up * jumpAmount, ForceMode2D.Impulse);
+                playerAs.PlayOneShot(jumpAudioClip, 1.0f);
+                isGrounded = false;
+            }
 
-        // check for space bar press to jump
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
-        {
-            playerAnimator.enabled = false;
-            playerSr.sprite = jumpSprites[selectedCat];
-            playerRb.AddForce(Vector2.up * jumpAmount, ForceMode2D.Impulse);
-            playerAs.PlayOneShot(jumpAudioClip, 1.0f);
-            isGrounded = false;
+            // move the player according to input
+            transform.Translate(horizontalInput * moveSpeed * Time.deltaTime * Vector2.right);
         }
-
-        // move the player according to input
-        transform.Translate(horizontalInput * moveSpeed * Time.deltaTime * Vector2.right);
     }
 
     private void OnCollisionEnter2D(UnityEngine.Collision2D collision)
@@ -84,8 +82,11 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Bullet"))
         {
             Debug.Log("Bullet HIT!");
+            gameManager.UpdateLivesCount(-1);
             playerAs.PlayOneShot(hitClip, 1.0f);
+            CheckForGameOver();
             StartCoroutine(DisableHitIndicator());
+            
         }
 
     }
@@ -97,14 +98,26 @@ public class PlayerController : MonoBehaviour
             || collision.gameObject.CompareTag("Flame"))
         {
             Debug.Log("Enemy HIT!");
+            gameManager.UpdateLivesCount(-1);
             playerAs.PlayOneShot(hitClip, 1.0f);
+            CheckForGameOver();
             StartCoroutine(DisableHitIndicator());
+            
             // todo: add some kind of knockback
             //playerRb.AddForce(Vector2.up * 1.0f, ForceMode2D.Impulse);
         } else if (collision.gameObject.CompareTag("Fruit"))
         {
+            gameManager.IncrementFruitCount();
             playerAs.PlayOneShot(collectionClip, 20.0f);
             StartCoroutine(AnimateThenDestroy(collision.gameObject));
+        }
+    }
+
+    private void CheckForGameOver()
+    {
+        if (gameManager.GetLivesCount() <= 0)
+        {
+            gameManager.InitiateGameOver();
         }
     }
 

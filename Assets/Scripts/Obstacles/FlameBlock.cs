@@ -13,6 +13,7 @@ public class FlameBlock : MonoBehaviour
 
     private Animator flameAnimator;
     private SpriteRenderer flameSr;
+    private GameManager gameManager;
 
     // Start is called before the first frame update
     void Start()
@@ -21,6 +22,7 @@ public class FlameBlock : MonoBehaviour
         flameAnimator.enabled = false;
         flameSr = gameObject.GetComponent<SpriteRenderer>();
         flameTrigger.SetActive(false);
+        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         StartCoroutine(delayBeforeIntervalBegins());
     }
 
@@ -38,8 +40,7 @@ public class FlameBlock : MonoBehaviour
 
     IEnumerator flameBlockInterval()
     {
-        // todo: update to isGameActive when gameOver implemented
-        while(true)
+        while(gameManager.isActive)
         {
             if (onAndOffInterval < 1)
             {

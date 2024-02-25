@@ -20,9 +20,11 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer playerSr;
     private Rigidbody2D playerRb;
     private AudioSource playerAs;
+    private Renderer playerRenderer;
     // state
     private int selectedCat;
     private bool isGrounded = true;
+    private bool isImmune = false;
 
     // Start is called before the first frame update
     void Start()
@@ -32,6 +34,7 @@ public class PlayerController : MonoBehaviour
         playerRb = gameObject.GetComponent<Rigidbody2D>();
         playerSr = gameObject.GetComponent<SpriteRenderer>();
         playerAs = gameObject.GetComponent<AudioSource>();
+        playerRenderer = gameObject.GetComponent<Renderer>();
 
         // set player animator by selected cat
         playerAnimator.runtimeAnimatorController = catAnimationControllers[selectedCat];
@@ -79,14 +82,14 @@ public class PlayerController : MonoBehaviour
             playerAnimator.enabled = true;
         }
 
-        if (collision.gameObject.CompareTag("Bullet"))
+        if (collision.gameObject.CompareTag("Bullet") && !isImmune)
         {
             Debug.Log("Bullet HIT!");
             gameManager.UpdateLivesCount(-1);
             playerAs.PlayOneShot(hitClip, 1.0f);
             CheckForGameOver();
             StartCoroutine(DisableHitIndicator());
-            
+            StartCoroutine(IsImmune());
         }
 
     }
@@ -94,14 +97,15 @@ public class PlayerController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // TODO: create a function that uses a switch on basis of tag - then do unique sounds, knowckback etc.
-        if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Spike")
-            || collision.gameObject.CompareTag("Flame"))
+        if ((collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Spike")
+            || collision.gameObject.CompareTag("Flame")) && !isImmune)
         {
             Debug.Log("Enemy HIT!");
             gameManager.UpdateLivesCount(-1);
             playerAs.PlayOneShot(hitClip, 1.0f);
             CheckForGameOver();
             StartCoroutine(DisableHitIndicator());
+            StartCoroutine(IsImmune());
             
             // todo: add some kind of knockback
             //playerRb.AddForce(Vector2.up * 1.0f, ForceMode2D.Impulse);
@@ -117,9 +121,26 @@ public class PlayerController : MonoBehaviour
     {
         if (gameManager.GetLivesCount() <= 0)
         {
+            playerAnimator.enabled = false;
             gameManager.InitiateGameOver();
         }
     }
+
+    IEnumerator IsImmune()
+    {
+        isImmune = true;
+        Color hitIndicationColor = new Color32(255, 255, 255, 100);
+        for (var n = 0; n < 5; n++)
+        {
+            playerRenderer.material.color = Color.white;
+            yield return new WaitForSeconds(0.1f);
+            playerRenderer.material.color = hitIndicationColor;
+            yield return new WaitForSeconds(0.1f);
+        }
+        isImmune = false;
+        playerRenderer.material.color = Color.white;
+    }
+
 
     IEnumerator AnimateThenDestroy(GameObject obj)
     {

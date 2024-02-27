@@ -29,13 +29,13 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        selectedCat = MainManager.Instance.SelectedCat;
+        //selectedCat = MainManager.Instance.SelectedCat;
+        selectedCat = 0;
         playerAnimator = gameObject.GetComponent<Animator>();
         playerRb = gameObject.GetComponent<Rigidbody2D>();
         playerSr = gameObject.GetComponent<SpriteRenderer>();
         playerAs = gameObject.GetComponent<AudioSource>();
         playerRenderer = gameObject.GetComponent<Renderer>();
-
         // set player animator by selected cat
         playerAnimator.runtimeAnimatorController = catAnimationControllers[selectedCat];
 
@@ -85,11 +85,7 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Bullet") && !isImmune)
         {
             Debug.Log("Bullet HIT!");
-            gameManager.UpdateLivesCount(-1);
-            playerAs.PlayOneShot(hitClip, 1.0f);
-            CheckForGameOver();
-            StartCoroutine(DisableHitIndicator());
-            StartCoroutine(IsImmune());
+            HandleHit();
         }
 
     }
@@ -101,20 +97,22 @@ public class PlayerController : MonoBehaviour
             || collision.gameObject.CompareTag("Flame")) && !isImmune)
         {
             Debug.Log("Enemy HIT!");
-            gameManager.UpdateLivesCount(-1);
-            playerAs.PlayOneShot(hitClip, 1.0f);
-            CheckForGameOver();
-            StartCoroutine(DisableHitIndicator());
-            StartCoroutine(IsImmune());
-            
-            // todo: add some kind of knockback
-            //playerRb.AddForce(Vector2.up * 1.0f, ForceMode2D.Impulse);
+            HandleHit();
         } else if (collision.gameObject.CompareTag("Fruit"))
         {
             gameManager.IncrementFruitCount();
             playerAs.PlayOneShot(collectionClip, 20.0f);
             StartCoroutine(AnimateThenDestroy(collision.gameObject));
         }
+    }
+
+    private void HandleHit()
+    {
+        gameManager.UpdateLivesCount(-1);
+        playerAs.PlayOneShot(hitClip, 1.0f);
+        CheckForGameOver();
+        StartCoroutine(DisableHitIndicator());
+        StartCoroutine(IsImmune());
     }
 
     private void CheckForGameOver()

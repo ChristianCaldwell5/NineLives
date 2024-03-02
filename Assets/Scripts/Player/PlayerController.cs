@@ -76,8 +76,11 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(UnityEngine.Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Obstacle"))
+        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Obstacle")
+            || collision.gameObject.CompareTag("Platform"))
         {
+            Debug.Log(transform.position.y);
+            Debug.Log(collision.gameObject.transform);
             isGrounded = true;
             playerAnimator.enabled = true;
         }
@@ -88,6 +91,22 @@ public class PlayerController : MonoBehaviour
             HandleHit();
         }
 
+    }
+
+    private void OnCollisionStay2D(UnityEngine.Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Platform"))
+        {
+            transform.parent = collision.transform;
+        }
+    }
+
+    private void OnCollisionExit2D(UnityEngine.Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Platform"))
+        {
+            transform.parent = null;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyPatrol : MonoBehaviour
+public class Patrol : MonoBehaviour
 {
     const float DEFAULT_SPEED = 5.0f;
     private float speed = DEFAULT_SPEED;
     public Transform[] moveSpots;
+    public bool isDynamicWait = true;
+
     // components
     private SpriteRenderer enemySr;
     private Animator enemyAnimator;
@@ -24,7 +26,7 @@ public class EnemyPatrol : MonoBehaviour
         enemyAnimator = gameObject.GetComponent<Animator>();
         waitTime = Random.Range(lowWait, highWait);
         spotIndex++;
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
@@ -32,8 +34,11 @@ public class EnemyPatrol : MonoBehaviour
     {
         if (gameManager.isActive)
         {
-            //float horizontalInput = Input.GetAxisRaw("Horizontal");
-            enemyAnimator.SetFloat("Speed_f", Mathf.Abs(speed));
+            if (enemyAnimator)
+            {
+                //float horizontalInput = Input.GetAxisRaw("Horizontal");
+                enemyAnimator.SetFloat("Speed_f", Mathf.Abs(speed));
+            }
 
             // transform object towards current move spot
             transform.position = Vector2.MoveTowards(transform.position, moveSpots[spotIndex].position, speed * Time.deltaTime);
@@ -48,7 +53,13 @@ public class EnemyPatrol : MonoBehaviour
                     speed = DEFAULT_SPEED;
                     // determine next index
                     DetermineSpotIndex();
-                    waitTime = Random.Range(lowWait, highWait);
+                    if (isDynamicWait)
+                    {
+                        waitTime = Random.Range(lowWait, highWait);
+                    } else
+                    {
+                        waitTime = 2.0f;
+                    }
                 }
                 else
                 {

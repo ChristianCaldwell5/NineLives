@@ -11,6 +11,7 @@ TagManager:
   - Spike
   - Flame
   - Bullet
+  - Platform
   layers:
   - Default
   - TransparentFX

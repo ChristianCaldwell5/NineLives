@@ -42,8 +42,21 @@ public class PlayerController : MonoBehaviour
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
     }
 
-    // Update is called once per frame
     void Update()
+    {
+        // check for space bar press to jump
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        {
+            playerAnimator.enabled = false;
+            playerSr.sprite = jumpSprites[selectedCat];
+            playerRb.AddForce(Vector2.up * jumpAmount, ForceMode2D.Impulse);
+            playerAs.PlayOneShot(jumpAudioClip, 1.0f);
+            isGrounded = false;
+        }
+    }
+
+    // Update is called once per frame
+    void FixedUpdate()
     {
         if (gameManager.isActive)
         {
@@ -59,16 +72,6 @@ public class PlayerController : MonoBehaviour
                 playerSr.flipX = true;
             }
 
-            // check for space bar press to jump
-            if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
-            {
-                playerAnimator.enabled = false;
-                playerSr.sprite = jumpSprites[selectedCat];
-                playerRb.AddForce(Vector2.up * jumpAmount, ForceMode2D.Impulse);
-                playerAs.PlayOneShot(jumpAudioClip, 1.0f);
-                isGrounded = false;
-            }
-
             // move the player according to input
             transform.Translate(horizontalInput * moveSpeed * Time.deltaTime * Vector2.right);
         }
@@ -79,10 +82,17 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Obstacle")
             || collision.gameObject.CompareTag("Platform"))
         {
-            Debug.Log(transform.position.y);
-            Debug.Log(collision.gameObject.transform);
-            isGrounded = true;
-            playerAnimator.enabled = true;
+            // get collision bounds
+            Debug.Log("Box collider of ground Y: "+collision.gameObject.GetComponent<Collider2D>().bounds.size.y);
+            Debug.Log("Object transform Y: "+collision.gameObject.transform.position.y);
+            Debug.Log("Player transform Y: "+transform.position.y);
+            // if player is above the ground, then set isGrounded to true
+            if (transform.position.y > collision.gameObject.transform.position.y + collision.gameObject.GetComponent<Collider2D>().bounds.size.y - 0.04f)
+            {
+                Debug.Log("Player is grounded");
+                isGrounded = true;
+                playerAnimator.enabled = true;
+            }
         }
 
         if (collision.gameObject.CompareTag("Bullet") && !isImmune)

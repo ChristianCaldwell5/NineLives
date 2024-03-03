@@ -1174,10 +1174,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1517864506}
     m_Modifications:
-    - target: {fileID: 125960941926861764, guid: db2b8ed97ca794c2da959dd53a0688f4, type: 3}
-      propertyPath: m_FlipX
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3006332893051297129, guid: db2b8ed97ca794c2da959dd53a0688f4, type: 3}
       propertyPath: m_Name
       value: Evil Plant
@@ -7829,12 +7825,20 @@ PrefabInstance:
       value: 0.2889777
       objectReference: {fileID: 0}
     - target: {fileID: 147974894164651819, guid: d8ba5eace42764a789a9b76ad8a8309c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 147974894164651819, guid: d8ba5eace42764a789a9b76ad8a8309c, type: 3}
       propertyPath: m_Offset.x
       value: -0.0055111498
       objectReference: {fileID: 0}
     - target: {fileID: 867629011529057501, guid: d8ba5eace42764a789a9b76ad8a8309c, type: 3}
       propertyPath: m_Size.x
       value: 0.29448885
+      objectReference: {fileID: 0}
+    - target: {fileID: 867629011529057501, guid: d8ba5eace42764a789a9b76ad8a8309c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 867629011529057501, guid: d8ba5eace42764a789a9b76ad8a8309c, type: 3}
       propertyPath: m_Offset.x
@@ -7885,6 +7889,10 @@ PrefabInstance:
       value: 0.2889777
       objectReference: {fileID: 0}
     - target: {fileID: 2829641936281112500, guid: d8ba5eace42764a789a9b76ad8a8309c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2829641936281112500, guid: d8ba5eace42764a789a9b76ad8a8309c, type: 3}
       propertyPath: m_Offset.x
       value: -0.0055111498
       objectReference: {fileID: 0}
@@ -7903,6 +7911,10 @@ PrefabInstance:
     - target: {fileID: 7858478148125160595, guid: d8ba5eace42764a789a9b76ad8a8309c, type: 3}
       propertyPath: m_Size.x
       value: 0.29173335
+      objectReference: {fileID: 0}
+    - target: {fileID: 7858478148125160595, guid: d8ba5eace42764a789a9b76ad8a8309c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7858478148125160595, guid: d8ba5eace42764a789a9b76ad8a8309c, type: 3}
       propertyPath: m_Offset.x

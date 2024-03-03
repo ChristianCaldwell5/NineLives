@@ -45,8 +45,9 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         // check for space bar press to jump
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && playerRb.velocity.magnitude <= 1)
         {
+            Debug.Log("Jumping: " + playerRb.velocity.magnitude);
             playerAnimator.enabled = false;
             playerSr.sprite = jumpSprites[selectedCat];
             playerRb.AddForce(Vector2.up * jumpAmount, ForceMode2D.Impulse);
@@ -82,10 +83,6 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Obstacle")
             || collision.gameObject.CompareTag("Platform"))
         {
-            // get collision bounds
-            Debug.Log("Box collider of ground Y: "+collision.gameObject.GetComponent<Collider2D>().bounds.size.y);
-            Debug.Log("Object transform Y: "+collision.gameObject.transform.position.y);
-            Debug.Log("Player transform Y: "+transform.position.y);
             // if player is above the ground, then set isGrounded to true
             if (transform.position.y > collision.gameObject.transform.position.y + collision.gameObject.GetComponent<Collider2D>().bounds.size.y - 0.04f)
             {

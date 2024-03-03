@@ -18,7 +18,7 @@ public class Bullet : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         transform.Translate(speed * Time.deltaTime * Vector3.left);
     }
@@ -28,7 +28,6 @@ public class Bullet : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Obstacle")
             || collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Colission in bullet class");
             Destroy(gameObject);
             //StartCoroutine(AnimateAndDestroy());
         }

@@ -12,8 +12,8 @@ public class EvilPlant : MonoBehaviour
     private Animator plantAnimator;
     private SpriteRenderer plantSr;
     private float shotAnimationTime = 0.667f;
-    private Vector3 leftFacingSpawnOffset = new Vector3(-0.09299994f, 0.05499999f, 0);
-    private Vector3 rightFacingSpawnOffset = new Vector3(-0.09299994f, 0.05499999f, 0);
+    private Vector3 leftFacingSpawnOffset = new Vector3(-0.09299994f, 0.056f, 0);
+    private Vector3 rightFacingSpawnOffset = new Vector3(0.085f, 0.056f, 0);
     private bool isLeftFacing = true;
 
     // Start is called before the first frame update

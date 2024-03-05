@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1015185929831914423}
   - component: {fileID: 6987878395835276371}
   m_Layer: 0
-  m_Name: brown-rect
+  m_Name: Brown Rect
   m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

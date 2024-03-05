@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2158601538865286468}
   - component: {fileID: 2201337292336821436}
   m_Layer: 0
-  m_Name: brown-block
+  m_Name: Brown Block
   m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

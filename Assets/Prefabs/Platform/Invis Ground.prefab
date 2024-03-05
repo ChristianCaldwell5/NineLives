@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 325345689282042689}
   - component: {fileID: 589013582155212980}
   m_Layer: 0
-  m_Name: InvisGround
+  m_Name: Invis Ground
   m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -12,7 +12,7 @@ public class Patrol : MonoBehaviour
     // components
     private SpriteRenderer enemySr;
     private Animator enemyAnimator;
-    private int spotIndex = 0;
+    public int spotIndex = 0;
     private float waitTime;
     private float lowWait = 1.0f;
     private float highWait = 2.0f;
@@ -24,8 +24,14 @@ public class Patrol : MonoBehaviour
     {
         enemySr = gameObject.GetComponent<SpriteRenderer>();
         enemyAnimator = gameObject.GetComponent<Animator>();
-        waitTime = Random.Range(lowWait, highWait);
-        spotIndex++;
+        if (isDynamicWait)
+        {
+            waitTime = Random.Range(lowWait, highWait);
+        } else
+        {
+            waitTime = 2.0f;
+        }  
+        //DetermineSpotIndex();
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
     }
 

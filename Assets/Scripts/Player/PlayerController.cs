@@ -83,6 +83,8 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Obstacle")
             || collision.gameObject.CompareTag("Platform"))
         {
+            Debug.Log("Player Y: " + transform.position.y);
+            Debug.Log("Object Y: " + (collision.gameObject.transform.position.y + collision.gameObject.GetComponent<Collider2D>().bounds.size.y));
             // if player is above the ground, then set isGrounded to true
             if (transform.position.y > collision.gameObject.transform.position.y + collision.gameObject.GetComponent<Collider2D>().bounds.size.y - 0.04f)
             {

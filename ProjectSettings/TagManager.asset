@@ -12,6 +12,7 @@ TagManager:
   - Flame
   - Bullet
   - Platform
+  - Speed Chest
   layers:
   - Default
   - TransparentFX

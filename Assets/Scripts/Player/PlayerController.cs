@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+// use Chest script from Cainos.PixelArtPlatformer_VillageProps namespace
+using Cainos.PixelArtPlatformer_VillageProps;
 
 public class PlayerController : MonoBehaviour
 {
@@ -25,6 +27,7 @@ public class PlayerController : MonoBehaviour
     private int selectedCat;
     private bool isGrounded = true;
     private bool isImmune = false;
+    private bool hasSpeedAbility = false;
 
     // Start is called before the first frame update
     void Start()
@@ -53,6 +56,15 @@ public class PlayerController : MonoBehaviour
             playerRb.AddForce(Vector2.up * jumpAmount, ForceMode2D.Impulse);
             playerAs.PlayOneShot(jumpAudioClip, 1.0f);
             isGrounded = false;
+        }
+
+        // check if shift key is being held down
+        if (Input.GetKey(KeyCode.LeftShift) && hasSpeedAbility && isGrounded)
+        {
+            moveSpeed = 8.0f;
+        } else
+        {
+            moveSpeed = 5.0f;
         }
     }
 
@@ -131,6 +143,12 @@ public class PlayerController : MonoBehaviour
             gameManager.IncrementFruitCount();
             playerAs.PlayOneShot(collectionClip, 20.0f);
             StartCoroutine(AnimateThenDestroy(collision.gameObject));
+        } else if (collision.gameObject.CompareTag("Speed Chest"))
+        {
+            // get Chest script from collision object
+            Chest chest = collision.gameObject.GetComponent<Chest>();
+            chest.Open();
+            hasSpeedAbility = true;
         }
     }
 

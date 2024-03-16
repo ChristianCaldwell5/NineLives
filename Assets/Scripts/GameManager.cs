@@ -52,6 +52,8 @@ public class GameManager : MonoBehaviour
     {
         fruitsCollected++;
         fruitCountUI.text = fruitsCollected.ToString();
+        // check for extra health
+        CheckForOneUp();
     }
 
     public void UpdateLivesCount(int amount)
@@ -86,5 +88,13 @@ public class GameManager : MonoBehaviour
     public void RestartGame()
     {
         SceneManager.LoadScene(1);
+    }
+
+    private void CheckForOneUp()
+    {
+        if (fruitsCollected % 5 == 0)
+        {
+            UpdateLivesCount(1);
+        }
     }
 }

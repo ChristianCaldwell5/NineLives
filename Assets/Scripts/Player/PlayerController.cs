@@ -32,8 +32,8 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //selectedCat = MainManager.Instance.SelectedCat;
-        selectedCat = 0;
+        selectedCat = MainManager.Instance.SelectedCat;
+        //selectedCat = 0;
         playerAnimator = gameObject.GetComponent<Animator>();
         playerRb = gameObject.GetComponent<Rigidbody2D>();
         playerSr = gameObject.GetComponent<SpriteRenderer>();
@@ -95,10 +95,8 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Obstacle")
             || collision.gameObject.CompareTag("Platform"))
         {
-            Debug.Log("Player Y: " + transform.position.y);
-            Debug.Log("Object Y: " + (collision.gameObject.transform.position.y + collision.gameObject.GetComponent<Collider2D>().bounds.size.y));
             // if player is above the ground, then set isGrounded to true
-            if (transform.position.y > collision.gameObject.transform.position.y + collision.gameObject.GetComponent<Collider2D>().bounds.size.y - 0.04f)
+            if (transform.position.y > collision.gameObject.transform.position.y + collision.gameObject.GetComponent<Collider2D>().bounds.size.y - 0.06f)
             {
                 Debug.Log("Player is grounded");
                 isGrounded = true;
@@ -188,6 +186,8 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator AnimateThenDestroy(GameObject obj)
     {
+        // move back
+        obj.GetComponent<BoxCollider2D>().enabled = false;
         obj.GetComponent<Animator>().SetBool("isCollected", true);
         yield return new WaitForSeconds(0.5f);
         Destroy(obj);

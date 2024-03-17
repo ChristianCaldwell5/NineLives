@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Patrol : MonoBehaviour
 {
-    const float DEFAULT_SPEED = 5.0f;
-    private float speed = DEFAULT_SPEED;
+    public float activeSpeed = 5.0f;
+    private float speed;
     public Transform[] moveSpots;
     public bool isDynamicWait = true;
 
@@ -22,6 +22,7 @@ public class Patrol : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        speed = activeSpeed;
         enemySr = gameObject.GetComponent<SpriteRenderer>();
         enemyAnimator = gameObject.GetComponent<Animator>();
         if (isDynamicWait)
@@ -56,7 +57,7 @@ public class Patrol : MonoBehaviour
                 // wait the specified time
                 if (waitTime <= 0)
                 {
-                    speed = DEFAULT_SPEED;
+                    speed = activeSpeed;
                     // determine next index
                     DetermineSpotIndex();
                     if (isDynamicWait)

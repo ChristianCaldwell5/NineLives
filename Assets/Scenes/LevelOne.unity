@@ -13252,6 +13252,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 1932852141}
     m_Modifications:
     - target: {fileID: 1015185929831914423, guid: e441f3efe28cd4ac78291aa6fb66f44c, type: 3}
+      propertyPath: speed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1015185929831914423, guid: e441f3efe28cd4ac78291aa6fb66f44c, type: 3}
+      propertyPath: activeSpeed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1015185929831914423, guid: e441f3efe28cd4ac78291aa6fb66f44c, type: 3}
       propertyPath: moveSpots.Array.data[0]
       value: 
       objectReference: {fileID: 1933798908}

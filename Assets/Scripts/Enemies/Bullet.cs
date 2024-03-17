@@ -5,7 +5,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public bool shootLeft = true;
-    private float speed = 5.0f;
+    private float speed = 6.0f;
     // ANIMATION is disabled for now
     //private Animator bulletAnimator;
     //private float destroyAnimationTime = 0.167f;

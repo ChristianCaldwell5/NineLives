@@ -18,15 +18,21 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI gameOverFruitTotalUI;
     public TextMeshProUGUI pausedLivesCounterUI;
     public TextMeshProUGUI pausedFruitCounterUI;
+    public TextMeshProUGUI levelSummaryLivesCounterUI;
+    public TextMeshProUGUI levelSummaryFruitCounterUI;
     public GameObject hud;
     public GameObject gameOverOverlay;
     public GameObject pauseMenuOverlay;
+    public GameObject levelSummaryOverlay;
 
     // Start is called before the first frame update
     void Start()
     {
-        // starting lives is nine (the name of the game)
-        lives = 9;
+        lives = MainManager.Instance.LivesCarriedOver > 0 ? MainManager.Instance.LivesCarriedOver : 9;
+        fruitsCollected = MainManager.Instance.FruitCarriedOver > 0 ? MainManager.Instance.FruitCarriedOver : 0;
+        livesCountUI.text = lives.ToString();
+        fruitCountUI.text = fruitsCollected.ToString();
+        //lives = 9;
     }
 
     // Update is called once per frame
@@ -59,6 +65,7 @@ public class GameManager : MonoBehaviour
     public void UpdateLivesCount(int amount)
     {
         lives += amount;
+        Debug.Log("UI Lives: " + lives.ToString());
         livesCountUI.text = lives.ToString();
     }
 
@@ -80,6 +87,15 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0;
     }
 
+    public void ShowLevelSummary()
+    {
+        isActive = false;
+        Time.timeScale = 0;
+        levelSummaryLivesCounterUI.text = lives.ToString();
+        levelSummaryFruitCounterUI.text = fruitsCollected.ToString();
+        levelSummaryOverlay.SetActive(true);
+    }
+
     public void GoToMainMenu()
     {
         SceneManager.LoadScene(0);
@@ -88,6 +104,23 @@ public class GameManager : MonoBehaviour
     public void RestartGame()
     {
         SceneManager.LoadScene(1);
+    }
+
+    public void LoadNextLevel() 
+    {
+        isActive = true;
+        Time.timeScale = 1;
+        MainManager.Instance.LivesCarriedOver = GetLivesCount();
+        MainManager.Instance.FruitCarriedOver = GetFruitCollectedCOunt();
+        int currentIndex = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(currentIndex+1);
+        // Persist lives and fruits. Same as cat selection from title screen
+        // Then assign initial fruit and hearts for the level
+        //lives = MainManager.Instance.LivesCarriedOver;
+        //Debug.Log("Lives at end = " + lives.ToString());
+        
+        //UpdateLivesCount(0);
+        //Debug.Log("Text: " + livesCountUI.text);
     }
 
     private void CheckForOneUp()

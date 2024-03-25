@@ -147,6 +147,9 @@ public class PlayerController : MonoBehaviour
             Chest chest = collision.gameObject.GetComponent<Chest>();
             chest.Open();
             hasSpeedAbility = true;
+        } else if (collision.gameObject.CompareTag("Goal"))
+        {
+            gameManager.ShowLevelSummary();
         }
     }
 

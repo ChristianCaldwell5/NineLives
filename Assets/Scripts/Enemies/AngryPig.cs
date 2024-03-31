@@ -2,43 +2,39 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Patrol : MonoBehaviour
+public class AngryPig : MonoBehaviour
 {
-    public float activeSpeed = 5.0f;
-    private float speed;
+
+    public float walkSpeed = 3.0f;
+    public float runSpeed = 6.0f;
     public Transform[] moveSpots;
-    public bool isDynamicWait = true;
+    private bool playerInSight = false;
+    public GameObject playerObject;
 
     // components
     private SpriteRenderer enemySr;
     private Animator enemyAnimator;
     public int spotIndex = 0;
-    private float waitTime;
-    private float lowWait = 1.0f;
-    private float highWait = 2.0f;
     private bool movingRight = true;
     private GameManager gameManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        speed = activeSpeed;
-        enemySr = gameObject.GetComponent<SpriteRenderer>() != null ? gameObject.GetComponent<SpriteRenderer>() : null;
-        enemyAnimator = gameObject.GetComponent<Animator>() != null ? gameObject.GetComponent<Animator>() : null;
-        if (isDynamicWait)
-        {
-            waitTime = Random.Range(lowWait, highWait);
-        } else
-        {
-            waitTime = 2.0f;
-        }  
-        //DetermineSpotIndex();
+        enemySr = gameObject.GetComponent<SpriteRenderer>();
+        enemyAnimator = gameObject.GetComponent<Animator>();
+
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        // determine if in range and looking
+        playerInSight = IsPlayerInSight();
+
+        float speed = playerInSight ? runSpeed : walkSpeed;
+        Debug.Log("Speed is: " + speed);
         if (gameManager.isActive)
         {
             if (enemyAnimator)
@@ -46,33 +42,30 @@ public class Patrol : MonoBehaviour
                 //float horizontalInput = Input.GetAxisRaw("Horizontal");
                 enemyAnimator.SetFloat("Speed_f", Mathf.Abs(speed));
             }
-
             // transform object towards current move spot
             transform.position = Vector2.MoveTowards(transform.position, moveSpots[spotIndex].position, speed * Time.deltaTime);
 
             // check if object has reach current move spot
             if (Vector2.Distance(transform.position, moveSpots[spotIndex].position) < 0.2f)
             {
-                speed = 0;
-                // wait the specified time
-                if (waitTime <= 0)
-                {
-                    speed = activeSpeed;
-                    // determine next index
-                    DetermineSpotIndex();
-                    if (isDynamicWait)
-                    {
-                        waitTime = Random.Range(lowWait, highWait);
-                    } else
-                    {
-                        waitTime = 2.0f;
-                    }
-                }
-                else
-                {
-                    waitTime -= Time.deltaTime;
-                }
+                DetermineSpotIndex();
             }
+        }
+    }
+
+    bool IsPlayerInSight()
+    {
+        if (Mathf.Abs(Vector2.Distance(playerObject.transform.position, gameObject.transform.position)) < 7.0f
+            && ((movingRight && playerObject.transform.position.x > gameObject.transform.position.x)
+            || (!movingRight && playerObject.transform.position.x < gameObject.transform.position.x))
+            && (Mathf.Abs(playerObject.transform.position.y - gameObject.transform.position.y) < 2.0f)
+            )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
@@ -84,11 +77,7 @@ public class Patrol : MonoBehaviour
             {
                 spotIndex--;
                 movingRight = false;
-                if (enemySr)
-                {
-                    enemySr.flipX = true;
-                }
-                
+                enemySr.flipX = false;
             }
             else
             {
@@ -101,10 +90,7 @@ public class Patrol : MonoBehaviour
             {
                 spotIndex++;
                 movingRight = true;
-                if (enemySr)
-                {
-                    enemySr.flipX = false;
-                }
+                enemySr.flipX = true;
             }
             else
             {

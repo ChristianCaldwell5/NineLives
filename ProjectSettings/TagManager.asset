@@ -14,6 +14,7 @@ TagManager:
   - Platform
   - Speed Chest
   - Goal
+  - Recovery Chest
   layers:
   - Default
   - TransparentFX

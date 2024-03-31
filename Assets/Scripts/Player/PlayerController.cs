@@ -7,7 +7,7 @@ using Cainos.PixelArtPlatformer_VillageProps;
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 5.0f;
-    public float jumpAmount = 5.0f;
+    public float jumpAmount = 7.0f;
     public AudioClip jumpAudioClip;
     public AudioClip hitClip;
     public AudioClip collectionClip;
@@ -28,12 +28,13 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded = true;
     private bool isImmune = false;
     private bool hasSpeedAbility = false;
+    private bool hasRecoveryAbility = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        selectedCat = MainManager.Instance.SelectedCat;
-        //selectedCat = 0;
+        // selectedCat = MainManager.Instance.SelectedCat;
+        selectedCat = 0;
         playerAnimator = gameObject.GetComponent<Animator>();
         playerRb = gameObject.GetComponent<Rigidbody2D>();
         playerSr = gameObject.GetComponent<SpriteRenderer>();
@@ -50,7 +51,6 @@ public class PlayerController : MonoBehaviour
         // check for space bar press to jump
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded && playerRb.velocity.magnitude <= 1)
         {
-            Debug.Log("Jumping: " + playerRb.velocity.magnitude);
             playerAnimator.enabled = false;
             playerSr.sprite = jumpSprites[selectedCat];
             playerRb.AddForce(Vector2.up * jumpAmount, ForceMode2D.Impulse);
@@ -96,9 +96,8 @@ public class PlayerController : MonoBehaviour
             || collision.gameObject.CompareTag("Platform"))
         {
             // if player is above the ground, then set isGrounded to true
-            if (transform.position.y > collision.gameObject.transform.position.y + collision.gameObject.GetComponent<Collider2D>().bounds.size.y - 0.06f)
+            if (transform.position.y > collision.gameObject.transform.position.y + collision.gameObject.GetComponent<Collider2D>().bounds.size.y - 1.0f)
             {
-                Debug.Log("Player is grounded");
                 isGrounded = true;
                 playerAnimator.enabled = true;
             }
@@ -106,7 +105,7 @@ public class PlayerController : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Bullet") && !isImmune)
         {
-            Debug.Log("Bullet HIT!");
+
             HandleHit();
         }
 
@@ -134,7 +133,7 @@ public class PlayerController : MonoBehaviour
         if ((collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Spike")
             || collision.gameObject.CompareTag("Flame")) && !isImmune)
         {
-            Debug.Log("Enemy HIT!");
+
             HandleHit();
         } else if (collision.gameObject.CompareTag("Fruit"))
         {
@@ -146,8 +145,18 @@ public class PlayerController : MonoBehaviour
             // get Chest script from collision object
             Chest chest = collision.gameObject.GetComponent<Chest>();
             chest.Open();
+            gameManager.ToggleChestHint();
             hasSpeedAbility = true;
-        } else if (collision.gameObject.CompareTag("Goal"))
+        }
+        else if (collision.gameObject.CompareTag("Recovery Chest"))
+        {
+            // get Chest script from collision object
+            Chest chest = collision.gameObject.GetComponent<Chest>();
+            chest.Open();
+            gameManager.ToggleChestHint();
+            hasRecoveryAbility = true;
+        }
+        else if (collision.gameObject.CompareTag("Goal"))
         {
             gameManager.ShowLevelSummary();
         }
@@ -175,7 +184,7 @@ public class PlayerController : MonoBehaviour
     {
         isImmune = true;
         Color hitIndicationColor = new Color32(255, 255, 255, 100);
-        for (var n = 0; n < 5; n++)
+        for (var n = 0; n < (hasRecoveryAbility ? 10 : 5); n++)
         {
             playerRenderer.material.color = Color.white;
             yield return new WaitForSeconds(0.1f);

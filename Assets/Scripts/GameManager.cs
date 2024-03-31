@@ -20,6 +20,8 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI pausedFruitCounterUI;
     public TextMeshProUGUI levelSummaryLivesCounterUI;
     public TextMeshProUGUI levelSummaryFruitCounterUI;
+    public GameObject chestHint;
+    public GameObject abilityHint;
     public GameObject hud;
     public GameObject gameOverOverlay;
     public GameObject pauseMenuOverlay;
@@ -28,11 +30,12 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        lives = MainManager.Instance.LivesCarriedOver > 0 ? MainManager.Instance.LivesCarriedOver : 9;
-        fruitsCollected = MainManager.Instance.FruitCarriedOver > 0 ? MainManager.Instance.FruitCarriedOver : 0;
+        // lives = MainManager.Instance.LivesCarriedOver > 0 ? MainManager.Instance.LivesCarriedOver : 9;
+        // fruitsCollected = MainManager.Instance.FruitCarriedOver > 0 ? MainManager.Instance.FruitCarriedOver : 0;
+        lives = 9;
+        fruitsCollected = 0;
         livesCountUI.text = lives.ToString();
         fruitCountUI.text = fruitsCollected.ToString();
-        //lives = 9;
     }
 
     // Update is called once per frame
@@ -65,7 +68,6 @@ public class GameManager : MonoBehaviour
     public void UpdateLivesCount(int amount)
     {
         lives += amount;
-        Debug.Log("UI Lives: " + lives.ToString());
         livesCountUI.text = lives.ToString();
     }
 
@@ -114,13 +116,12 @@ public class GameManager : MonoBehaviour
         MainManager.Instance.FruitCarriedOver = GetFruitCollectedCOunt();
         int currentIndex = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentIndex+1);
-        // Persist lives and fruits. Same as cat selection from title screen
-        // Then assign initial fruit and hearts for the level
-        //lives = MainManager.Instance.LivesCarriedOver;
-        //Debug.Log("Lives at end = " + lives.ToString());
-        
-        //UpdateLivesCount(0);
-        //Debug.Log("Text: " + livesCountUI.text);
+    }
+
+    public void ToggleChestHint()
+    {
+        chestHint.SetActive(false);
+        abilityHint.SetActive(true);
     }
 
     private void CheckForOneUp()

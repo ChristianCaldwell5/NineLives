@@ -15,6 +15,7 @@ public class QueenBee : MonoBehaviour
     private bool movingRight = true;
     public GameObject playerObject;
     private bool isFiring = false;
+    private bool isShotCoolDown = false;
 
     private float animationDurr = 0.667f;
 
@@ -36,7 +37,7 @@ public class QueenBee : MonoBehaviour
             //{
 
             //}
-            if (!isFiring)
+            if (!isFiring && !isShotCoolDown)
             {
                 FireIfInSight();
             }
@@ -105,7 +106,11 @@ public class QueenBee : MonoBehaviour
         beeAnimator.SetBool("IsFiring", true);
         yield return new WaitForSeconds(animationDurr/2);
         Instantiate(bulletPrefab, DetermineBulletSpawnPos(), bulletPrefab.transform.rotation);
-        beeAnimator.SetBool("IsFiring", false);
         isFiring = false;
+        beeAnimator.SetBool("IsFiring", false);
+        // shot cool down
+        isShotCoolDown = true;
+        yield return new WaitForSeconds(2);
+        isShotCoolDown = false;
     }
 }

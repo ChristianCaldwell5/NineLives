@@ -97,7 +97,7 @@ public class Patrol : MonoBehaviour
         }
         else
         {
-            if (spotIndex - 1 <= 0)
+            if (spotIndex - 1 < 0)
             {
                 spotIndex++;
                 movingRight = true;

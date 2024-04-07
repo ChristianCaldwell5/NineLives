@@ -30,8 +30,8 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // lives = MainManager.Instance.LivesCarriedOver > 0 ? MainManager.Instance.LivesCarriedOver : 9;
-        // fruitsCollected = MainManager.Instance.FruitCarriedOver > 0 ? MainManager.Instance.FruitCarriedOver : 0;
+        //lives = MainManager.Instance.LivesCarriedOver > 0 ? MainManager.Instance.LivesCarriedOver : 9;
+        //fruitsCollected = MainManager.Instance.FruitCarriedOver > 0 ? MainManager.Instance.FruitCarriedOver : 0;
         lives = 9;
         fruitsCollected = 0;
         livesCountUI.text = lives.ToString();

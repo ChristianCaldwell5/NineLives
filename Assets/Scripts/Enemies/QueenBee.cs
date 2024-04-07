@@ -41,7 +41,6 @@ public class QueenBee : MonoBehaviour
             {
                 FireIfInSight();
             }
-            // fire
             
 
             if (!isFiring)

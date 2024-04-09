@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public bool isActive = true;
     private int lives;
     private int fruitsCollected;
+    private bool playerHasFruitBoost = false;
 
     // UI
     public TextMeshProUGUI livesCountUI;
@@ -55,6 +56,11 @@ public class GameManager : MonoBehaviour
     public int GetFruitCollectedCOunt()
     {
         return fruitsCollected;
+    }
+
+    public void SetFruitBoost()
+    {
+        playerHasFruitBoost = true;
     }
 
     public void IncrementFruitCount()
@@ -126,7 +132,8 @@ public class GameManager : MonoBehaviour
 
     private void CheckForOneUp()
     {
-        if (fruitsCollected % 5 == 0)
+        int factor = playerHasFruitBoost ? 4 : 5;
+        if (fruitsCollected % factor == 0)
         {
             UpdateLivesCount(1);
         }

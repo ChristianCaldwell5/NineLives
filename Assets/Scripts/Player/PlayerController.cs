@@ -7,7 +7,7 @@ using Cainos.PixelArtPlatformer_VillageProps;
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 5.0f;
-    public float jumpAmount = 7.0f;
+    public float jumpAmount = 6.0f;
     public AudioClip jumpAudioClip;
     public AudioClip hitClip;
     public AudioClip collectionClip;
@@ -29,6 +29,8 @@ public class PlayerController : MonoBehaviour
     private bool isImmune = false;
     private bool hasSpeedAbility = false;
     private bool hasRecoveryAbility = false;
+    private bool hasFruitBoost = true;
+    private bool isBeingFruitBoosted = false;
 
     // Start is called before the first frame update
     void Start()
@@ -64,7 +66,10 @@ public class PlayerController : MonoBehaviour
             moveSpeed = 8.0f;
         } else
         {
-            moveSpeed = 5.0f;
+            if (!isBeingFruitBoosted)
+            {
+                moveSpeed = 5.0f;
+            }
         }
     }
 
@@ -103,9 +108,8 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (collision.gameObject.CompareTag("Bullet") && !isImmune)
+        if ((collision.gameObject.CompareTag("Bullet") || collision.gameObject.CompareTag("Bunny")) && !isImmune)
         {
-
             HandleHit();
         }
 
@@ -137,29 +141,44 @@ public class PlayerController : MonoBehaviour
             HandleHit();
         } else if (collision.gameObject.CompareTag("Fruit"))
         {
+            if (hasFruitBoost)
+            {
+                StartCoroutine(IsImmune());
+                
+            }
             gameManager.IncrementFruitCount();
             playerAs.PlayOneShot(collectionClip, 20.0f);
             StartCoroutine(AnimateThenDestroy(collision.gameObject));
         } else if (collision.gameObject.CompareTag("Speed Chest"))
         {
             // get Chest script from collision object
-            Chest chest = collision.gameObject.GetComponent<Chest>();
-            chest.Open();
-            gameManager.ToggleChestHint();
+            ActivateChest(collision);
             hasSpeedAbility = true;
         }
         else if (collision.gameObject.CompareTag("Recovery Chest"))
         {
             // get Chest script from collision object
-            Chest chest = collision.gameObject.GetComponent<Chest>();
-            chest.Open();
-            gameManager.ToggleChestHint();
+            ActivateChest(collision);
             hasRecoveryAbility = true;
+        }
+        else if (collision.gameObject.CompareTag("Fruit Chest"))
+        {
+            // get Chest script from collision object
+            ActivateChest(collision);
+            hasFruitBoost = true;
         }
         else if (collision.gameObject.CompareTag("Goal"))
         {
             gameManager.ShowLevelSummary();
         }
+    }
+
+    private void ActivateChest(Collider2D collision)
+    {
+        // get Chest script from collision object
+        Chest chest = collision.gameObject.GetComponent<Chest>();
+        chest.Open();
+        gameManager.ToggleChestHint();
     }
 
     private void HandleHit()

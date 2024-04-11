@@ -133,6 +133,7 @@ public class GameManager : MonoBehaviour
     private void CheckForOneUp()
     {
         int factor = playerHasFruitBoost ? 4 : 5;
+        Debug.Log(factor);
         if (fruitsCollected % factor == 0)
         {
             UpdateLivesCount(1);

@@ -26,7 +26,7 @@ public class Bullet : MonoBehaviour
     private void OnCollisionEnter2D(UnityEngine.Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Obstacle")
-            || collision.gameObject.CompareTag("Player"))
+            || collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Platform"))
         {
             Destroy(gameObject);
             //StartCoroutine(AnimateAndDestroy());

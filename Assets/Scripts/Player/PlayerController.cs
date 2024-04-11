@@ -165,6 +165,7 @@ public class PlayerController : MonoBehaviour
         {
             // get Chest script from collision object
             ActivateChest(collision);
+            gameManager.SetFruitBoost();
             hasFruitBoost = true;
         }
         else if (collision.gameObject.CompareTag("Goal"))

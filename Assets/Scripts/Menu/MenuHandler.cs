@@ -8,6 +8,7 @@ public class MenuHandler : MonoBehaviour
 {
 
     public List<GameObject> catDisplays;
+    public GameObject guideDialog;
     private int currentCatIndex = 0;
 
     // Start is called before the first frame update
@@ -58,4 +59,13 @@ public class MenuHandler : MonoBehaviour
         }
         catDisplays[currentCatIndex].SetActive(true);
     }
+
+    /**
+     * Toggle how to play guide
+     */
+    public void ToggleHowToDialog(bool toggle)
+    {
+        guideDialog.SetActive(toggle);
+    }
+
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -21,22 +22,45 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI pausedFruitCounterUI;
     public TextMeshProUGUI levelSummaryLivesCounterUI;
     public TextMeshProUGUI levelSummaryFruitCounterUI;
+    public GameObject musicMuteToggleUI;
+    public GameObject sfxMuteToggleUI;
     public GameObject chestHint;
     public GameObject abilityHint;
     public GameObject hud;
     public GameObject gameOverOverlay;
     public GameObject pauseMenuOverlay;
     public GameObject levelSummaryOverlay;
+    public AudioSource mainCameraAudio;
+
+    private Toggle musicMuteToggleComponent;
+    private Toggle sfxMuteToggleComponent;
+    private bool isMusicMuted = false;
+    private bool isSfxMuted = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        //lives = MainManager.Instance.LivesCarriedOver > 0 ? MainManager.Instance.LivesCarriedOver : 9;
-        //fruitsCollected = MainManager.Instance.FruitCarriedOver > 0 ? MainManager.Instance.FruitCarriedOver : 0;
-        lives = 9;
-        fruitsCollected = 0;
-        livesCountUI.text = lives.ToString();
-        fruitCountUI.text = fruitsCollected.ToString();
+        musicMuteToggleComponent = musicMuteToggleUI.GetComponent<Toggle>();
+        sfxMuteToggleComponent = sfxMuteToggleUI.GetComponent<Toggle>();
+        if (MainManager.Instance)
+        {
+            lives = MainManager.Instance.LivesCarriedOver > 0 ? MainManager.Instance.LivesCarriedOver : 9;
+            fruitsCollected = MainManager.Instance.FruitCarriedOver > 0 ? MainManager.Instance.FruitCarriedOver : 0;
+            isMusicMuted = MainManager.Instance.IsMusicMute;
+            isSfxMuted = MainManager.Instance.IsSfxMute;
+        } else
+        {
+            lives = 9;
+            fruitsCollected = 0;
+        }
+        mainCameraAudio.mute = isMusicMuted;
+        musicMuteToggleComponent.SetIsOnWithoutNotify(isMusicMuted);
+        sfxMuteToggleComponent.SetIsOnWithoutNotify(isSfxMuted);
+        if (livesCountUI && fruitCountUI)
+        {
+            livesCountUI.text = lives.ToString();
+            fruitCountUI.text = fruitsCollected.ToString();
+        }
     }
 
     // Update is called once per frame
@@ -97,6 +121,7 @@ public class GameManager : MonoBehaviour
 
     public void ShowLevelSummary()
     {
+        //playerAs.mute = true;
         isActive = false;
         Time.timeScale = 0;
         levelSummaryLivesCounterUI.text = lives.ToString();
@@ -104,13 +129,22 @@ public class GameManager : MonoBehaviour
         levelSummaryOverlay.SetActive(true);
     }
 
+    public void ResumeGame()
+    {
+        isActive = true;
+        hud.SetActive(true);
+        pauseMenuOverlay.SetActive(false);
+    }
+
     public void GoToMainMenu()
     {
+        CleanupGame();
         SceneManager.LoadScene(0);
     }
 
     public void RestartGame()
     {
+        CleanupGame();
         SceneManager.LoadScene(1);
     }
 
@@ -130,13 +164,38 @@ public class GameManager : MonoBehaviour
         abilityHint.SetActive(true);
     }
 
+
+    public void ToggleMusicMute()
+    {
+        mainCameraAudio.mute = !mainCameraAudio.mute;
+        MainManager.Instance.IsMusicMute = mainCameraAudio.mute;
+        Debug.Log("Toggled: " + MainManager.Instance.IsMusicMute);
+    }
+
+    public void ToggleSfxMute()
+    {
+        MainManager.Instance.IsSfxMute = !MainManager.Instance.IsSfxMute;
+    }
+
     private void CheckForOneUp()
     {
         int factor = playerHasFruitBoost ? 4 : 5;
-        Debug.Log(factor);
         if (fruitsCollected % factor == 0)
         {
             UpdateLivesCount(1);
         }
+    }
+
+    private void CleanupGame()
+    {
+        lives = 9;
+        fruitsCollected = 0;
+        livesCountUI.text = "9";
+        fruitCountUI.text = "0";
+        MainManager.Instance.LivesCarriedOver = 9;
+        MainManager.Instance.FruitCarriedOver = 0;
+        MainManager.Instance.SpeedBoostUnlocked = false;
+        MainManager.Instance.RecoveryBoostUnlocked = false;
+        MainManager.Instance.FruitBoostUnlocked = false;
     }
 }

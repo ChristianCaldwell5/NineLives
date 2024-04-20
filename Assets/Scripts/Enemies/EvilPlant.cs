@@ -8,9 +8,11 @@ public class EvilPlant : MonoBehaviour
     public float shotInterval = 4;
     public GameObject bulletPrefab;
     private GameManager gameManager;
+    public AudioClip shotAudioClip;
 
     private Animator plantAnimator;
     private SpriteRenderer plantSr;
+    private AudioSource plantAs;
     private float shotAnimationTime = 0.667f;
     private Vector3 leftFacingSpawnOffset = new Vector3(-0.09299994f, 0.056f, 0);
     private Vector3 rightFacingSpawnOffset = new Vector3(0.085f, 0.056f, 0);
@@ -20,6 +22,7 @@ public class EvilPlant : MonoBehaviour
     void Start()
     {
         plantAnimator = gameObject.GetComponent<Animator>();
+        plantAs = gameObject.GetComponent<AudioSource>();
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         StartCoroutine(ShotInterval());
         plantSr = gameObject.GetComponent<SpriteRenderer>();
@@ -59,6 +62,19 @@ public class EvilPlant : MonoBehaviour
         }
     }
 
+    private void PlaySoundClip(string sound)
+    {
+        if (!MainManager.Instance.IsSfxMute)
+        {
+            switch (sound)
+            {
+                case "shot":
+                    plantAs.PlayOneShot(shotAudioClip, 1.0f);
+                    break;
+            }
+        }
+    }
+
     IEnumerator ShotInterval()
     {
         while(gameManager.isActive)
@@ -66,6 +82,7 @@ public class EvilPlant : MonoBehaviour
             yield return new WaitForSeconds(shotInterval);
             plantAnimator.SetBool("isFiring", true);
             yield return new WaitForSeconds(shotAnimationTime/2);
+            PlaySoundClip("shot");
             Instantiate(bulletPrefab, DetermineBulletSpawnPos(), DetermineBulletSpawnRotation());
             yield return new WaitForSeconds(shotAnimationTime/2);
             plantAnimator.SetBool("isFiring", false);

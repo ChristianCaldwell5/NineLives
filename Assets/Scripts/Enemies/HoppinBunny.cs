@@ -9,10 +9,11 @@ public class HoppinBunny : MonoBehaviour
     public float runSpeed = 5.0f;
     public Transform[] moveSpots;
     public float jumpAmount = 7.0f;
+    public AudioClip jumpAudioClip;
 
     // components
     private SpriteRenderer enemySr;
-    //private Animator enemyAnimator;
+    private AudioSource enemyAs;
     private Rigidbody2D enemyRb;
     public int spotIndex = 0;
     private bool movingRight = false;
@@ -22,6 +23,7 @@ public class HoppinBunny : MonoBehaviour
     void Start()
     {
         enemySr = gameObject.GetComponent<SpriteRenderer>();
+        enemyAs = gameObject.GetComponent<AudioSource>();
         //enemyAnimator = gameObject.GetComponent<Animator>();
         enemyRb = gameObject.GetComponent<Rigidbody2D>();
 
@@ -58,6 +60,7 @@ public class HoppinBunny : MonoBehaviour
         if ((collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Obstacle")
             || collision.gameObject.CompareTag("Platform")) && !enemyRb.simulated)
         {
+            PlaySoundClip("jump");
             enemyRb.AddForce(Vector2.up * jumpAmount, ForceMode2D.Impulse);
         }
             if (collision.gameObject.CompareTag("Player"))
@@ -93,6 +96,19 @@ public class HoppinBunny : MonoBehaviour
             else
             {
                 spotIndex--;
+            }
+        }
+    }
+
+    private void PlaySoundClip(string sound)
+    {
+        if (!MainManager.Instance.IsSfxMute)
+        {
+            switch (sound)
+            {
+                case "jump":
+                    enemyAs.PlayOneShot(jumpAudioClip, 1.0f);
+                    break;
             }
         }
     }

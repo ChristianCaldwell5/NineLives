@@ -27,9 +27,7 @@ public class PauseMenu : MonoBehaviour
     public void ResumeGame()
     {
         Time.timeScale = 1;
-        gameManager.isActive = true;
-        hudPanel.SetActive(true);
-        gameObject.SetActive(false);
+        gameManager.ResumeGame();
     }
 
     // initiate confirmation dialog with customized text

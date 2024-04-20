@@ -29,14 +29,23 @@ public class PlayerController : MonoBehaviour
     private bool isImmune = false;
     private bool hasSpeedAbility = false;
     private bool hasRecoveryAbility = false;
-    private bool hasFruitBoost = true;
+    private bool hasFruitBoost = false;
     private bool isBeingFruitBoosted = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        // selectedCat = MainManager.Instance.SelectedCat;
-        selectedCat = 0;
+        if (MainManager.Instance)
+        {
+            selectedCat = MainManager.Instance.SelectedCat;
+            hasSpeedAbility = MainManager.Instance.SpeedBoostUnlocked;
+            hasRecoveryAbility = MainManager.Instance.RecoveryBoostUnlocked;
+            hasFruitBoost = MainManager.Instance.FruitBoostUnlocked;
+        } else
+        {
+            selectedCat = 0;
+        }
+        
         playerAnimator = gameObject.GetComponent<Animator>();
         playerRb = gameObject.GetComponent<Rigidbody2D>();
         playerSr = gameObject.GetComponent<SpriteRenderer>();
@@ -56,7 +65,7 @@ public class PlayerController : MonoBehaviour
             playerAnimator.enabled = false;
             playerSr.sprite = jumpSprites[selectedCat];
             playerRb.AddForce(Vector2.up * jumpAmount, ForceMode2D.Impulse);
-            playerAs.PlayOneShot(jumpAudioClip, 1.0f);
+            PlaySoundClip("jump");
             isGrounded = false;
         }
 
@@ -144,22 +153,23 @@ public class PlayerController : MonoBehaviour
             if (hasFruitBoost)
             {
                 StartCoroutine(IsImmune());
-                
             }
             gameManager.IncrementFruitCount();
-            playerAs.PlayOneShot(collectionClip, 20.0f);
+            PlaySoundClip("collection");
             StartCoroutine(AnimateThenDestroy(collision.gameObject));
         } else if (collision.gameObject.CompareTag("Speed Chest"))
         {
             // get Chest script from collision object
             ActivateChest(collision);
             hasSpeedAbility = true;
+            MainManager.Instance.SpeedBoostUnlocked = true;
         }
         else if (collision.gameObject.CompareTag("Recovery Chest"))
         {
             // get Chest script from collision object
             ActivateChest(collision);
             hasRecoveryAbility = true;
+            MainManager.Instance.RecoveryBoostUnlocked = true;
         }
         else if (collision.gameObject.CompareTag("Fruit Chest"))
         {
@@ -167,6 +177,7 @@ public class PlayerController : MonoBehaviour
             ActivateChest(collision);
             gameManager.SetFruitBoost();
             hasFruitBoost = true;
+            MainManager.Instance.FruitBoostUnlocked = true;
         }
         else if (collision.gameObject.CompareTag("Goal"))
         {
@@ -185,7 +196,7 @@ public class PlayerController : MonoBehaviour
     private void HandleHit()
     {
         gameManager.UpdateLivesCount(-1);
-        playerAs.PlayOneShot(hitClip, 1.0f);
+        PlaySoundClip("hit");
         CheckForGameOver();
         StartCoroutine(DisableHitIndicator());
         StartCoroutine(IsImmune());
@@ -197,6 +208,25 @@ public class PlayerController : MonoBehaviour
         {
             playerAnimator.enabled = false;
             gameManager.InitiateGameOver();
+        }
+    }
+
+    private void PlaySoundClip(string sound)
+    {
+        if (!MainManager.Instance.IsSfxMute)
+        {
+            switch(sound)
+            {
+                case "jump":
+                    playerAs.PlayOneShot(jumpAudioClip, 1.0f);
+                    break;
+                case "collection":
+                    playerAs.PlayOneShot(collectionClip, 20.0f);
+                    break;
+                case "hit":
+                    playerAs.PlayOneShot(hitClip, 1.0f);
+                    break;
+            }
         }
     }
 
